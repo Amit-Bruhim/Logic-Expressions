@@ -1,4 +1,7 @@
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class Main {
     // global variable for the currently selected expression, and all the
@@ -45,7 +48,7 @@ public class Main {
     public static void main(String[] args) {
         // create a new menu
         MenuItem[] menu = createMenu();
-        
+
         // run until the user choose to stop the program
         while (true) {
             // let the user choose an expression
@@ -73,7 +76,7 @@ public class Main {
      * function that creates the menu
      * 
      * @return MenuItem[] - an array of menu item's
-    */
+     */
     static MenuItem[] createMenu() {
         return new MenuItem[] {
                 // Nandify
@@ -87,20 +90,94 @@ public class Main {
         };
     }
 
+    /**
+     * Function that converts the current expression to an equivalent NAND
+     * expression
+     * and prints the result.
+     *
+     * @return void
+     */
     static void nandifyFunc() {
-        System.out.println("im func NANDIFY");
+        System.out.println(currentExpression.nandify().toString());
     }
 
+    /**
+     * Function that converts the current expression to an equivalent NOR expression
+     * and prints the result.
+     *
+     * @return void
+     */
     static void norifyFunc() {
-        System.out.println("im func NORIFY");
+        System.out.println(currentExpression.norify().toString());
     }
 
+    /**
+     * Function that simplifies the current logical expression
+     * and prints the simplified result.
+     *
+     * @return void
+     */
     static void simplifyFunc() {
-        System.out.println("im func SIMPLIFY");
+        System.out.println(currentExpression.simplify().toString());
     }
-
+    
+    /**
+     * prompts the user to enter boolean values (t/f) for each variable
+     * in the currently selected expression, evaluates the expression
+     * with the given assignment, and prints the result.
+     *
+     * Uses a loop to ensure only 't' or 'f' are accepted as input.
+     *
+     * @return void
+     */
     static void evaluateFunc() {
-        System.out.println("im func EVALUATE");
+        // notify the user to enter values
+        System.out.println(GREEN + "Enter values for the following variables (t/f):" + RESET);
+
+        // get all variables from the current expression
+        List<String> variables = currentExpression.getVariables();
+
+        // create a map to store variable assignments
+        Map<String, Boolean> assignment = new TreeMap<>();
+
+        // consume leftover newline from previous input
+        scanner.nextLine();
+
+        // iterate through all variables
+        for (String var : variables) {
+            String input = "";
+            boolean isValid = false;
+
+            // loop until a valid input ('t' or 'f') is given
+            while (!isValid) {
+                System.out.print("Enter value for " + var + " (t/f): ");
+                input = scanner.nextLine();
+
+                // check if input is valid
+                if (input.equals("t") || input.equals("f")) {
+                    isValid = true; // exit the loop
+                } else {
+                    System.out.println(RED + "Invalid input! Please enter 't' or 'f' only." + RESET);
+                }
+            }
+
+            // convert input to boolean
+            boolean value = input.equals("t");
+
+            // store the value in the assignment map
+            assignment.put(var, value);
+        }
+
+        try {
+            // evaluate the expression with the given assignment
+            Boolean result = currentExpression.evaluate(assignment);
+
+            // print the result
+            System.out.println("Result: " + result);
+        } catch (Exception e) {
+            // handle any errors during evaluation
+            System.out.println(RED + "Error while evaluating expression" + RESET);
+        }
     }
 
     /**
@@ -121,7 +198,7 @@ public class Main {
      * 
      * @param menu - an array of options
      * @return void
-    */
+     */
     static void takeOption(MenuItem[] menu) {
         // variable to store the user's choice
         int number = 0;
