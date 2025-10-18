@@ -21,7 +21,7 @@ This repository contains a mini-project in Java focused on logical expressions. 
 
 ---
 
-### Features
+## Features
 - **Nandify** – Converts the selected logical expression to its NAND-only form.  
 - **Norify** – Converts the selected logical expression to its NOR-only form.  
 - **Simplify** – Simplifies the expression, applying basic logical simplifications.  
